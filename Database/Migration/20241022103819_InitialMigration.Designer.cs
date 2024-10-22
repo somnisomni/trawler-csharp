@@ -8,15 +8,12 @@ using Trawler.Database;
 
 #nullable disable
 
-namespace Trawler.Database.Migration
-{
+namespace Trawler.Database.Migration {
     [DbContext(typeof(DatabaseContext))]
     [Migration("20241022103819_InitialMigration")]
-    partial class InitialMigration
-    {
+    partial class InitialMigration {
         /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
+        protected override void BuildTargetModel(ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("utf8mb4_general_ci")

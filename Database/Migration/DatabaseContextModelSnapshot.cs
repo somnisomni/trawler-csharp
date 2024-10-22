@@ -9,10 +9,8 @@ using Trawler.Database;
 
 namespace Trawler.Database.Migration {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
+    partial class DatabaseContextModelSnapshot : ModelSnapshot {
+        protected override void BuildModel(ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseCollation("utf8mb4_general_ci")

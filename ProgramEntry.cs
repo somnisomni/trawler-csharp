@@ -4,8 +4,8 @@ using Trawler.Database.Model;
 using Trawler.Utility.Logging;
 
 namespace Trawler {
-  public class ProgramEntry {
-    private static readonly ILogger logger = new ConsoleLogger(nameof(ProgramEntry));
+  public static class ProgramEntry {
+    private static readonly LoggerBase logger = new ConsoleLogger(nameof(ProgramEntry));
 
     public static async Task Main(string[] args) {
       logger.Log("Program started");

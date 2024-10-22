@@ -8,7 +8,7 @@ namespace Trawler.Database.Model {
     SinglePost
   }
   
-  public class CrawlTargetConfiguration : IEntityTypeConfiguration<CrawlTarget> {
+  public sealed class CrawlTargetConfiguration : IEntityTypeConfiguration<CrawlTarget> {
     public void Configure(EntityTypeBuilder<CrawlTarget> builder) {
       builder.ToTable("crawl_targets");
       
