@@ -86,6 +86,9 @@ namespace Trawler.Config {
     public required string User { get; init; } = "user";
     public required string Password { get; init; } = "password";
     public string? Database { get; init; } = "trawler";
+    
+    [YamlIgnore]
+    public string ConnectionString => $"Server={Host}; Port={Port}; User={User}; Password={Password}; Database={Database}";
   }
 
   public sealed record WebDriverConfig {

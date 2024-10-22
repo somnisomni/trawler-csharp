@@ -1,4 +1,5 @@
 using Trawler.Config;
+using Trawler.Database;
 using Trawler.Utility.Logging;
 
 namespace Trawler {
@@ -16,6 +17,19 @@ namespace Trawler {
       
       // Configuration
       await Configuration.Instance.Load();
+      
+      // Database connection test
+      await using(var db = new DatabaseContext()) {
+        try {
+          if(await db.Database.CanConnectAsync()) {
+            logger.Log("Database connection test successful.");
+          }
+        } catch(Exception e) {
+          logger.LogError("Database connection test failed.", e);
+        }
+      }
+      
+      logger.Log("Initialization completed.");
     }
   }
 }
