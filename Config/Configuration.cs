@@ -42,7 +42,7 @@ namespace Trawler.Config {
     }
 
     private async Task<string> ReadConfigFileAsync() {
-      string configFilePath = Constants.CONFIG_FILE_ABSOLUTE_PATH;
+      string configFilePath = Constants.ConfigFileAbsolutePath;
 
       logger.Log($"Reading configuration file: {configFilePath}");
 

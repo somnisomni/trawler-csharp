@@ -1,8 +1,8 @@
 namespace Trawler.Common {
   public static class Constants {
-    public const string CONFIG_FILE_PATH = "config/config.yaml";
-    public static string CONFIG_FILE_ABSOLUTE_PATH => Path.GetFullPath(CONFIG_FILE_PATH);
-    public static readonly string[] WEBDRIVER_ARGUMENTS = [ "--headless",
+    public const string ConfigFilePath = "config/config.yaml";
+    public static string ConfigFileAbsolutePath => Path.GetFullPath(ConfigFilePath);
+    public static readonly string[] WebDriverArguments = [ "--headless",
                                                             "--disable-gpu",
                                                             "--no-sandbox",
                                                             "--disable-dev-shm-usage" ];
