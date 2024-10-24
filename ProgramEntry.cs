@@ -1,4 +1,7 @@
+using OpenQA.Selenium.Chrome;
+using Trawler.Common;
 using Trawler.Config;
+using Trawler.Crawler;
 using Trawler.Database;
 using Trawler.Utility.Logging;
 
@@ -7,9 +10,25 @@ namespace Trawler {
     private static readonly ILogger logger = new ConsoleLogger(nameof(ProgramEntry));
 
     public static async Task Main(string[] args) {
-      logger.Log("Program started");
+      logger.Log("Program started.");
 
       await Initialize();
+      
+      // test
+      {
+        var drvService = ChromeDriverService.CreateDefaultService();
+        drvService.HideCommandPromptWindow = true;
+        drvService.SuppressInitialDiagnosticInformation = true;
+
+        var drvOptions = new ChromeOptions();
+        drvOptions.AddArguments(Constants.WebDriverArguments);
+        drvOptions.AddArgument("--user-agent=Chrome/130.0.0.0");
+      
+        ChromeDriver drv = new ChromeDriver(drvService, drvOptions);
+        drv.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
+      
+        (await new TwitterAccountCrawler(drv, "nasa").DoCrawlAsync()).DebugPrint();
+      }
     }
 
     private static async Task Initialize() {
