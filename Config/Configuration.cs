@@ -6,7 +6,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Trawler.Config {
   public sealed class Configuration {
-    private static readonly LoggerBase logger = new ConsoleLogger(nameof(Configuration));
+    private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(Configuration));
     
     private static Configuration? instance = null;
     public static Configuration Instance => instance ??= new Configuration();

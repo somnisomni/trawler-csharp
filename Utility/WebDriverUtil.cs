@@ -5,9 +5,12 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using Trawler.Common;
 using Trawler.Config;
+using Trawler.Utility.Logging;
 
 namespace Trawler.Utility {
   public static class WebDriverUtil {
+    private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(WebDriverUtil));
+    
     public static ChromiumDriver CreateChromiumDriver(bool msEdge = false) {
       ChromiumDriverService service = msEdge
         ? EdgeDriverService.CreateDefaultService()
@@ -28,6 +31,7 @@ namespace Trawler.Utility {
         : new ChromeDriver((ChromeDriverService)service, (ChromeOptions)options);
       driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
       
+      logger.Log($"{(msEdge ? "Microsoft Edge" : "Chrome")} WebDriver created.");
       return driver;
     }
     

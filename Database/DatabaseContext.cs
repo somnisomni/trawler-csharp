@@ -4,7 +4,7 @@ using Trawler.Utility.Logging;
 
 namespace Trawler.Database {
   public partial class DatabaseContext : DbContext {
-    private static readonly LoggerBase logger = new ConsoleLogger(nameof(DatabaseContext));
+    private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(DatabaseContext));
     
     public DatabaseContext() { }
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
