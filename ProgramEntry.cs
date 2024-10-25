@@ -1,8 +1,8 @@
-using OpenQA.Selenium.Chrome;
-using Trawler.Common;
+using OpenQA.Selenium.Chromium;
 using Trawler.Config;
 using Trawler.Crawler;
 using Trawler.Database;
+using Trawler.Utility;
 using Trawler.Utility.Logging;
 
 namespace Trawler {
@@ -16,17 +16,8 @@ namespace Trawler {
       
       // test
       {
-        var drvService = ChromeDriverService.CreateDefaultService();
-        drvService.HideCommandPromptWindow = true;
-        drvService.SuppressInitialDiagnosticInformation = true;
-
-        var drvOptions = new ChromeOptions();
-        drvOptions.AddArguments(Constants.WebDriverArguments);
-        drvOptions.AddArgument("--user-agent=Chrome/130.0.0.0");
-      
-        ChromeDriver drv = new ChromeDriver(drvService, drvOptions);
-        drv.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
-      
+        using ChromiumDriver drv = WebDriverUtil.CreateChromiumDriver();
+        
         (await new TwitterAccountCrawler(drv, "nasa").DoCrawlAsync()).DebugPrint();
         (await new TwitterAccountWorkaroundCrawler(drv, "nasa", 1849140528631173326).DoCrawlAsync()).DebugPrint();
       }
@@ -35,10 +26,10 @@ namespace Trawler {
     private static async Task Initialize() {
       logger.Log("Start initialization...");
       
-      // Configuration
+      // *** Configuration *** //
       await Configuration.Instance.Load();
       
-      // Database connection test
+      // *** Database connection test *** //
       await using(var db = new DatabaseContext()) {
         try {
           if(await db.Database.CanConnectAsync()) {
