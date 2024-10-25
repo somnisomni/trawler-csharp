@@ -6,7 +6,7 @@ using Trawler.Database;
 using Trawler.Utility.Logging;
 
 namespace Trawler {
-  public class ProgramEntry {
+  public static class ProgramEntry {
     private static readonly ILogger logger = new ConsoleLogger(nameof(ProgramEntry));
 
     public static async Task Main(string[] args) {
@@ -28,6 +28,7 @@ namespace Trawler {
         drv.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
       
         (await new TwitterAccountCrawler(drv, "nasa").DoCrawlAsync()).DebugPrint();
+        (await new TwitterAccountWorkaroundCrawler(drv, "nasa", 1849140528631173326).DoCrawlAsync()).DebugPrint();
       }
     }
 

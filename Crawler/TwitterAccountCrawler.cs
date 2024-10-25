@@ -2,8 +2,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using Trawler.Config;
+using Trawler.Utility;
 using Trawler.Utility.Logging;
 
 namespace Trawler.Crawler {
@@ -35,7 +34,10 @@ namespace Trawler.Crawler {
     }
   }
   
-  public class TwitterAccountCrawler(IWebDriver driver, string? handle = null, ulong? accountId = null) : CrawlerBase<TwitterAccountData>(driver) {
+  public class TwitterAccountCrawler(
+    IWebDriver driver,
+    string? handle = null,
+    ulong? accountId = null) : CrawlerBase<TwitterAccountData>(driver) {
     private readonly LoggerBase logger = new ConsoleLogger(nameof(TwitterAccountCrawler));
     private string BaseUrl {
       get {
@@ -53,6 +55,8 @@ namespace Trawler.Crawler {
     }
 
     public override async Task NavigateToTargetAsync() {
+      logger.Log("Navigating to user profile page...");
+
       await driver.Navigate().GoToUrlAsync(BaseUrl);
     }
     
@@ -61,8 +65,6 @@ namespace Trawler.Crawler {
       
       // #1. Navigate to target
       try {
-        logger.Log("Navigating to user profile page...");
-        
         await NavigateToTargetAsync();
       } catch(Exception e) {
         logger.LogError("Failed to navigate to the base URL.", e);
@@ -72,19 +74,11 @@ namespace Trawler.Crawler {
       // #2. Wait for profile page to be loaded (almost) completely
       try {
         logger.Log("Waiting for profile page to be loaded completely...");
-        
-        WebDriverWait wait = new WebDriverWait(driver,
-          TimeSpan.FromSeconds(Configuration.Instance.Config.WebDriver.WaitTimeout));
-        wait.PollingInterval = TimeSpan.FromMilliseconds(200);
-        IWebElement[] finds = [
-          wait.Until(drv => drv.FindElement(By.CssSelector("[data-testid='primaryColumn']"))),
-          wait.Until(drv => drv.FindElement(By.CssSelector("[data-testid='UserName']")))
-          // Since script elements can't be found by CSS selector, we will find them later
-        ];
-        
-        if(finds.Any(e => e == null)) {
-          throw new ApplicationException("Some of wait target elements are not found.");
-        }
+
+        WebDriverUtil.WaitForElements(driver, [
+          By.CssSelector("[data-testid='primaryColumn']"),
+          By.CssSelector("[data-testid='UserName']")
+        ]);
       } catch(Exception e) {
         logger.LogError("Seems like the profile page is not loaded correctly.", e);
         throw;
