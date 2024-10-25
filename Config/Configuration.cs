@@ -77,6 +77,9 @@ namespace Trawler.Config {
 
     [YamlMember(Alias = "webdriver")]
     public WebDriverConfig WebDriver { get; set; } = new();
+    
+    [YamlMember(Alias = "scheduler")]
+    public SchedulerConfig Scheduler { get; set; } = new();
   }
   
   public sealed record MySqlDatabaseConfig {
@@ -92,8 +95,11 @@ namespace Trawler.Config {
 
   public sealed record WebDriverConfig {
     public uint WaitTimeout { get; init; } = 5;
-    public string? CustomDriverPath { get; init; } = null;
     public string? CustomUserAgent { get; init; } = null;
-    public string? AdditionalArguments { get; init; } = null;
+    public string[] AdditionalArguments { get; init; } = [];
+  }
+
+  public sealed record SchedulerConfig {
+    public string DefaultTimezone { get; init; } = "Etc/UTC";
   }
 }
