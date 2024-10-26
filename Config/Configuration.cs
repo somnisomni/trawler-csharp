@@ -6,34 +6,34 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Trawler.Config {
   public sealed class Configuration {
-    private static readonly LoggerBase logger = new ConsoleLogger(nameof(Configuration));
-
+    private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(Configuration));
+    
     private static Configuration? instance = null;
     public static Configuration Instance => instance ??= new Configuration();
 
-    public ConfigRoot? Config { get; private set; }
-
+    public ConfigRoot Config { get; private set; } = new();
+    
     private Configuration() { }
 
     public async Task Load() {
       logger.Log($"Start loading configuration...");
 
-      ConfigRoot config = null;
+      ConfigRoot config;
       try {
         var deserializer = new DeserializerBuilder()
           .WithNamingConvention(CamelCaseNamingConvention.Instance)
           .Build();
         string configRaw = await ReadConfigFileAsync();
-
-        logger.Log("Deserializing configuration...");
+        
+        logger.Log("Parsing configuration...");
         config = deserializer.Deserialize<ConfigRoot>(configRaw);
       } catch(Exception e) {
-        logger.LogError("Error while deserializing configuration.", e);
+        logger.LogError("Error while parsing configuration.", e);
         throw;
       }
 
       if(config == null) {
-        logger.LogError("Deserialized configuration is null.");
+        logger.LogError("Parsed configuration is null.");
         throw new ApplicationException();
       }
 
@@ -60,10 +60,11 @@ namespace Trawler.Config {
         throw new FileNotFoundException();
       }
 
-      string configRaw = null;
-
+      string configRaw;
       try {
-        configRaw = await File.ReadAllTextAsync(configFilePath, Encoding.UTF8);
+        configRaw = await File.ReadAllTextAsync(
+          path: configFilePath,
+          encoding: Encoding.UTF8);
       } catch(Exception e) {
         logger.LogError("Error while reading configuration file.", e);
         throw;
@@ -81,26 +82,33 @@ namespace Trawler.Config {
 
   public sealed class ConfigRoot {
     [YamlMember(Alias = "mysql")]
-    public MySqlDatabaseConfig? MySql { get; set; }
+    public MySqlDatabaseConfig MySql { get; set; } = new();
 
     [YamlMember(Alias = "webdriver")]
-    public WebDriverConfig? WebDriver { get; set; }
+    public WebDriverConfig WebDriver { get; set; } = new();
+    
+    [YamlMember(Alias = "scheduler")]
+    public SchedulerConfig Scheduler { get; set; } = new();
   }
 
   public sealed record MySqlDatabaseConfig {
-    public string? Host { get; init; } = "localhost";
-    public ushort? Port { get; init; } = 3306;
-    public required string User { get; init; } = "user";
-    public required string Password { get; init; } = "password";
-    public string? Database { get; init; } = "trawler";
-
+    public string Host { get; init; } = "localhost";
+    public ushort Port { get; init; } = 3306;
+    public string User { get; init; } = "user";
+    public string Password { get; init; } = "password";
+    public string Database { get; init; } = "trawler";
+    
     [YamlIgnore]
-    public string ConnectionString =>
-      $"Server={Host}; Port={Port}; User={User}; Password={Password}; Database={Database}";
+    public string ConnectionString => $"Server={Host}; Port={Port}; User={User}; Password={Password}; Database={Database}";
   }
 
   public sealed record WebDriverConfig {
-    public string? CustomDriverPath { get; init; } = null;
-    public string? AdditionalArguments { get; init; } = null;
+    public uint WaitTimeout { get; init; } = 5;
+    public string? CustomUserAgent { get; init; } = null;
+    public string[] AdditionalArguments { get; init; } = [];
+  }
+
+  public sealed record SchedulerConfig {
+    public string DefaultTimezone { get; init; } = "Etc/UTC";
   }
 }
