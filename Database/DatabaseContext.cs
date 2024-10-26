@@ -12,8 +12,23 @@ namespace Trawler.Database {
     public DatabaseContext() { }
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
+    public static async Task<bool> TestConnection() {
+      bool result = false;
+      
+      try {
+        await using var db = new DatabaseContext();
+        result = await db.Database.CanConnectAsync();
+      
+        logger.Log("Database connection test successful.");
+      } catch(Exception e) {
+        logger.LogError("Database connection test failed.", e);
+      }
+
+      return result;
+    }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-      if(Configuration.Instance.Config == null) {
+      if(Configuration.Instance.IsLoaded == false) {
         // EF tooling environment
         logger.Log("NOTE: Configuration is not loaded, assuming EF tooling environment.");
 

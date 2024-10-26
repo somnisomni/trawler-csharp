@@ -27,17 +27,17 @@ namespace Trawler {
       logger.Log("Start initialization...");
       
       // *** Configuration *** //
-      await Configuration.Instance.Load();
+      try {
+        await Configuration.Instance.Load();
+      } catch {
+        logger.LogError("Configuration loading failed.");
+        throw;
+      }
       
       // *** Database connection test *** //
-      await using(var db = new DatabaseContext()) {
-        try {
-          if(await db.Database.CanConnectAsync()) {
-            logger.Log("Database connection test successful.");
-          }
-        } catch(Exception e) {
-          logger.LogError("Database connection test failed.", e);
-        }
+      if(!await DatabaseContext.TestConnection()) {
+        logger.LogError("Database connection should be configured and available to use this program.");
+        throw new ApplicationException("Database connection should be configured and available to use this program.");
       }
 
       logger.Log("Initialization completed.");

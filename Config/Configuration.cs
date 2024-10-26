@@ -12,6 +12,7 @@ namespace Trawler.Config {
     public static Configuration Instance => instance ??= new Configuration();
 
     public ConfigRoot Config { get; private set; } = new();
+    public bool IsLoaded { get; private set; } = false;
     
     private Configuration() { }
 
@@ -39,6 +40,7 @@ namespace Trawler.Config {
 
       logger.Log("Configuration loaded successfully.");
       Config = config;
+      IsLoaded = true;
     }
 
     public ConfigRoot LoadForEfMigration() {

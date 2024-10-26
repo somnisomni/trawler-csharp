@@ -12,6 +12,8 @@ namespace Trawler.Utility {
     private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(WebDriverUtil));
     
     public static ChromiumDriver CreateChromiumDriver(bool msEdge = false) {
+      logger.Log("Creating web driver instance...");
+      
       ChromiumDriverService service = msEdge
         ? EdgeDriverService.CreateDefaultService()
         : ChromeDriverService.CreateDefaultService();
@@ -31,7 +33,7 @@ namespace Trawler.Utility {
         : new ChromeDriver((ChromeDriverService)service, (ChromeOptions)options);
       driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
       
-      logger.Log($"{(msEdge ? "Microsoft Edge" : "Chrome")} WebDriver created.");
+      logger.Log($"{(msEdge ? "Edge" : "Chrome")} WebDriver created.");
       return driver;
     }
     
