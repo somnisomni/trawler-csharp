@@ -75,9 +75,9 @@ namespace Trawler.Crawler {
       try {
         logger.Log("Waiting for profile page to be loaded completely...");
 
-        WebDriverUtil.WaitForElements(driver, [
-          By.CssSelector("[data-testid='primaryColumn']"),
-          By.CssSelector("[data-testid='UserName']")
+        WebDriverUtil.WaitForElementsByCssSelectors(driver, [
+          "[data-testid='primaryColumn']",
+          "[data-testid='UserName']"
         ]);
       } catch(Exception e) {
         logger.LogError("Seems like the profile page is not loaded correctly.", e);
@@ -105,7 +105,7 @@ namespace Trawler.Crawler {
 
         // #3-3. Get content of UserProfileSchema script element
         schemaData = targetSchemaElement.GetAttribute("innerHTML");
-        if(schemaData is not { Length: > 0 } || !schemaData.StartsWith("{")) {
+        if(schemaData is not { Length: > 0 } || !schemaData.StartsWith('{')) {
           throw new ApplicationException("Can't get content of UserProfileSchema script element, or it has no/invalid content.");
         }
         

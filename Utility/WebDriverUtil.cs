@@ -55,5 +55,10 @@ namespace Trawler.Utility {
 
       return finds;
     }
+    
+    public static IWebElement[] WaitForElementsByCssSelectors(IWebDriver driver, string[] cssSelectors) {
+      By[] conditions = cssSelectors.Select(By.CssSelector).ToArray();
+      return WaitForElements(driver, conditions);
+    }
   }
 }

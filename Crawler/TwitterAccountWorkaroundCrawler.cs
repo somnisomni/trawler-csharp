@@ -26,9 +26,9 @@ public class TwitterAccountWorkaroundCrawler(
     try {
       logger.Log("Waiting for the post page to be loaded completely...");
 
-      WebDriverUtil.WaitForElements(driver, [
-        By.CssSelector("[data-testid='primaryColumn']"),
-        By.CssSelector("[data-testid='User-Name']"),
+      WebDriverUtil.WaitForElementsByCssSelectors(driver, [
+        "[data-testid='primaryColumn']",
+        "[data-testid='User-Name']",
       ]);
     } catch(Exception e) {
       logger.LogError("Seems like the post page is not loaded correctly.", e);
