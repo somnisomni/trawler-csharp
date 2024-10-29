@@ -25,10 +25,10 @@ namespace Trawler.Database.Migration
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CrawlType = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_general_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TargetId = table.Column<string>(type: "longtext", nullable: false, collation: "utf8mb4_general_ci")
+                    TargetScreenName = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    WorkaroundPostId = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    TargetId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    WorkaroundPostId = table.Column<ulong>(type: "bigint unsigned", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ using Trawler.Database;
 namespace Trawler.Database.Migration
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241029005051_InitialMigration")]
+    [Migration("20241029012834_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -82,12 +82,14 @@ namespace Trawler.Database.Migration
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<DateTime>("CreatedAt"));
 
-                    b.Property<string>("TargetId")
-                        .IsRequired()
+                    b.Property<ulong?>("TargetId")
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<string>("TargetScreenName")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("WorkaroundPostId")
-                        .HasColumnType("longtext");
+                    b.Property<ulong?>("WorkaroundPostId")
+                        .HasColumnType("bigint unsigned");
 
                     b.HasKey("Id");
 

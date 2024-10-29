@@ -79,12 +79,14 @@ namespace Trawler.Database.Migration
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<DateTime>("CreatedAt"));
 
-                    b.Property<string>("TargetId")
-                        .IsRequired()
+                    b.Property<ulong?>("TargetId")
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<string>("TargetScreenName")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("WorkaroundPostId")
-                        .HasColumnType("longtext");
+                    b.Property<ulong?>("WorkaroundPostId")
+                        .HasColumnType("bigint unsigned");
 
                     b.HasKey("Id");
 
