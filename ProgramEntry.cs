@@ -1,8 +1,6 @@
-using OpenQA.Selenium.Chromium;
 using Trawler.Config;
-using Trawler.Crawler;
 using Trawler.Database;
-using Trawler.Utility;
+using Trawler.Processor;
 using Trawler.Utility.Logging;
 
 namespace Trawler {
@@ -15,12 +13,7 @@ namespace Trawler {
       await Initialize();
       
       // test
-      {
-        using ChromiumDriver drv = WebDriverUtil.CreateChromiumDriver();
-        
-        (await new TwitterAccountCrawler(drv, "nasa").DoCrawlAsync()).DebugPrint();
-        (await new TwitterAccountWorkaroundCrawler(drv, "nasa", 1849140528631173326).DoCrawlAsync()).DebugPrint();
-      }
+      await CrawlProcessor.Process();
     }
 
     private static async Task Initialize() {
