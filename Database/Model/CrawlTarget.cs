@@ -14,6 +14,7 @@ namespace Trawler.Database.Model {
       
       builder.HasKey(x => x.Id);
       builder.Property(x => x.Id).IsRequired().ValueGeneratedOnAdd();
+      builder.Property(x => x.CreatedAt).IsRequired().ValueGeneratedOnAdd();
       builder.Property(x => x.CrawlType).IsRequired().HasConversion(t => t.ToString(), t => Enum.Parse<CrawlTargetType>(t));
       builder.Property(x => x.TargetId).IsRequired();
       
@@ -33,6 +34,7 @@ namespace Trawler.Database.Model {
   [EntityTypeConfiguration(typeof(CrawlTargetConfiguration))]
   public record CrawlTarget {
     public uint Id { get; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public CrawlTargetType CrawlType { get; set; }
     public string TargetId { get; set; }
     

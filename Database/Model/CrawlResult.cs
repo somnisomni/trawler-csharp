@@ -9,6 +9,7 @@ namespace Trawler.Database.Model {
       builder.HasKey(x => x.Id);
       builder.Property(x => x.Id).IsRequired().ValueGeneratedOnAdd();
       builder.Property(x => x.CrawlTargetId).IsRequired();
+      builder.Property(x => x.CrawlDoneAt).IsRequired().ValueGeneratedOnAdd();
       builder.Property(x => x.DisplayName).IsRequired();
       builder.Property(x => x.FollowerCount).IsRequired();
       builder.Property(x => x.FollowingCount).IsRequired();
@@ -27,6 +28,7 @@ namespace Trawler.Database.Model {
   public record CrawlResult {
     public uint Id { get; }
     public uint CrawlTargetId { get; set; }
+    public DateTime CrawlDoneAt { get; set; } = DateTime.UtcNow;
     
     // === Twitter User Data
     public string DisplayName { get; set; }
