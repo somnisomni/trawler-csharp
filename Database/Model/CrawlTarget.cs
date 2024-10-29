@@ -20,6 +20,13 @@ namespace Trawler.Database.Model {
       // === Specific to CrawlTargetType.AccountWorkaround
       builder.Property(x => x.WorkaroundPostId).IsRequired(false);
       // ===
+      
+      // === Relationships
+      builder.HasMany(x => x.CrawlResults)
+        .WithOne(x => x.CrawlTarget)
+        .HasForeignKey(x => x.CrawlTargetId)
+        .IsRequired();
+      // ===
     }
   }
   
@@ -31,6 +38,10 @@ namespace Trawler.Database.Model {
     
     // === Specific to CrawlTargetType.AccountWorkaround
     public string? WorkaroundPostId { get; set; }
+    // ===
+    
+    // === Relationships
+    public ICollection<CrawlResult> CrawlResults { get; } = new List<CrawlResult>();
     // ===
   }
 }

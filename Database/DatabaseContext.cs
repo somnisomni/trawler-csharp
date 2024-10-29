@@ -8,7 +8,8 @@ namespace Trawler.Database {
     private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(DatabaseContext));
     
     public DbSet<CrawlTarget> CrawlTargets { get; set; }
-
+    public DbSet<CrawlResult> CrawlResults { get; set; }
+    
     public DatabaseContext() { }
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
