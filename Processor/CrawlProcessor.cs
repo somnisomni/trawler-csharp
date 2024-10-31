@@ -59,8 +59,7 @@ namespace Trawler.Processor {
             }
 
             case CrawlTargetType.SinglePost: {
-              // TODO: Implement
-              logger.LogError("SinglePost is not implemented yet. Skip this target.");
+              CrawlResult? result = await DoCrawlSinglePostAsync(driver, target);
               continue;
             }
 
@@ -133,6 +132,19 @@ namespace Trawler.Processor {
         FollowingCount = data.FollowingCount,
         PostCount = data.PostCount,
       };
+    }
+    
+    private static async Task<CrawlResult?> DoCrawlSinglePostAsync(IWebDriver driver, CrawlTarget target) {
+      // TODO: Not fully implemented yet
+      if(target.TargetId == null || target.TargetScreenName == null) {
+        logger.LogError($"Both target post ID and screen name of target #{target.Id} are not properly set. Skip this target.");
+        return null;
+      }
+      
+      TwitterSinglePostCrawler crawler = new TwitterSinglePostCrawler(driver, target.TargetScreenName, target.TargetId.Value);
+      await crawler.DoCrawlAsync();
+      
+      return null;
     }
   }
 }
