@@ -105,7 +105,7 @@ namespace Trawler.Config {
   }
 
   public sealed record WebDriverConfig {
-    public uint WaitTimeout { get; init; } = 5;
+    public uint WaitTimeout { get; init; } = 10;
     public string? CustomUserAgent { get; init; } = null;
     public string[] AdditionalArguments { get; init; } = [];
   }
