@@ -58,13 +58,35 @@ namespace Trawler.Crawler {
     }
 
     public override async Task<TwitterPostData> DoCrawlAsync() {
+      logger.Log($"*** Start crawling single post data. Target user: @{handle}, Target post ID: {postId}");
+      
+      // #1. Start watching for Tweet data response
       Task<string?> responseWatcher = Task.Run(StartWatchTweetResultResponse);
       
-      await NavigateToTargetAsync();
+      // #2. Navigate to target
+      try {
+        await NavigateToTargetAsync();
+      } catch(Exception e) {
+        logger.LogError("Failed to navigate to the base URL.", e);
+        throw;
+      }
 
-      string? tweetData = await responseWatcher.WaitAsync(Timeout.InfiniteTimeSpan);
-      logger.Log($"tweet data: {tweetData}");
+      // #3. Wait for Tweet data response to be available
+      string? tweetData = null;
+      try {
+        logger.Log("Waiting for post data response to be available...");
+
+        tweetData = await responseWatcher.WaitAsync(Timeout.InfiniteTimeSpan);
+
+        if(tweetData == null) {
+          throw new ApplicationException("Response monitoring has done but no post data response available.");
+        }
+      } catch(Exception e) {
+        logger.LogError("Error occured while getting post data response.", e);
+        throw;
+      }
       
+      // #4. Parse Tweet data
       TwitterPostData resultData;
       try {
         logger.Log("Start parsing post data...");
@@ -83,19 +105,20 @@ namespace Trawler.Crawler {
         throw;
       }
       
-      resultData.DebugPrint();
-
-      return default;
+      // #5. Done
+      logger.Log($"*** Post data parsed successfully. Done crawling. (Post ID: #{resultData.Id})");
+      return resultData;
     }
     
     private async Task<string?> StartWatchTweetResultResponse() {
       // NOTE: `TweetResultByRestId` response is only available when not logged in to Twitter.
-      
       logger.Log("Start watching for `TweetResultByRestId` response...");
       
+      // Set up network monitoring
       var network = new NetworkManager(driver);
       string responseBody = null!;
       
+      // Set up network response receive event
       network.NetworkResponseReceived += (_, response) => {
         if(!response.ResponseUrl.Contains("TweetResultByRestId")) return;
         
@@ -113,8 +136,11 @@ namespace Trawler.Crawler {
         network.StopMonitoring();
         network = null;
       };
+      
+      // Begin network monitoring
       await network.StartMonitoring();
 
+      // Wait for response body to be available
       await TaskUtil.WaitForValueAsync(() => responseBody);
       return responseBody;
     }

@@ -140,9 +140,9 @@ namespace Trawler.Processor {
         logger.LogError($"Both target post ID and screen name of target #{target.Id} are not properly set. Skip this target.");
         return null;
       }
-      
-      TwitterSinglePostCrawler crawler = new TwitterSinglePostCrawler(driver, target.TargetScreenName, target.TargetId.Value);
-      await crawler.DoCrawlAsync();
+
+      TwitterPostData data = await new TwitterSinglePostCrawler(driver, target.TargetScreenName, target.TargetId.Value).DoCrawlAsync();
+      data.DebugPrint();
       
       return null;
     }

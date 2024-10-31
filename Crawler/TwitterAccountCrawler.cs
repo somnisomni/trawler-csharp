@@ -131,6 +131,7 @@ namespace Trawler.Crawler {
         throw;
       }
       
+      // #5. Done
       logger.Log($"*** User profile data parsed successfully. Done crawling. (User: @{resultData.ScreenName} (#{resultData.Id}))");
       return resultData;
     }
