@@ -38,7 +38,7 @@ namespace Trawler.Processor {
       }
       
       // #3. Do crawl
-      List<CrawlResult> results = [];
+      List<CrawlResultBase> results = [];
       
       foreach(CrawlTarget target in targets) {
         logger.Log($"***** Processing target #{target.Id}...");
@@ -47,7 +47,7 @@ namespace Trawler.Processor {
           switch(target.CrawlType) {
             case CrawlTargetType.Account:
             case CrawlTargetType.AccountWorkaround: {
-              CrawlResult? result = await DoCrawlAccountAsync(driver, target, target.CrawlType == CrawlTargetType.AccountWorkaround);
+              TwitterAccountCrawlResult? result = await DoCrawlAccountAsync(driver, target, target.CrawlType == CrawlTargetType.AccountWorkaround);
               
               if(result == null) {
                 logger.LogError("Error occurred while crawling account data. No result data will be stored.");
@@ -59,7 +59,14 @@ namespace Trawler.Processor {
             }
 
             case CrawlTargetType.SinglePost: {
-              CrawlResult? result = await DoCrawlSinglePostAsync(driver, target);
+              TwitterPostCrawlResult? result = await DoCrawlSinglePostAsync(driver, target);
+              
+              if(result == null) {
+                logger.LogError("Error occurred while crawling single post data. No result data will be stored.");
+                continue;
+              }
+              
+              results.Add(result);
               continue;
             }
 
@@ -94,7 +101,7 @@ namespace Trawler.Processor {
       logger.Log("Crawling process done.");
     }
 
-    private static async Task<CrawlResult?> DoCrawlAccountAsync(IWebDriver driver, CrawlTarget target, bool useWorkaround = false) {
+    private static async Task<TwitterAccountCrawlResult?> DoCrawlAccountAsync(IWebDriver driver, CrawlTarget target, bool useWorkaround = false) {
       TwitterAccountData data;
       
       // #1. Actual crawling with target data validation
@@ -124,7 +131,7 @@ namespace Trawler.Processor {
       }
       
       // #2. Construct the crawl result and return
-      return new CrawlResult {
+      return new TwitterAccountCrawlResult {
         CrawlTargetId = target.Id,
         CrawlDoneAt = DateTime.Now,
         DisplayName = data.DisplayName,
@@ -134,17 +141,27 @@ namespace Trawler.Processor {
       };
     }
     
-    private static async Task<CrawlResult?> DoCrawlSinglePostAsync(IWebDriver driver, CrawlTarget target) {
-      // TODO: Not fully implemented yet
+    private static async Task<TwitterPostCrawlResult?> DoCrawlSinglePostAsync(IWebDriver driver, CrawlTarget target) {
+      // #1. Target data validation
       if(target.TargetId == null || target.TargetScreenName == null) {
         logger.LogError($"Both target post ID and screen name of target #{target.Id} are not properly set. Skip this target.");
         return null;
       }
 
+      // #2. Actual crawling
       TwitterPostData data = await new TwitterSinglePostCrawler(driver, target.TargetScreenName, target.TargetId.Value).DoCrawlAsync();
-      data.DebugPrint();
-      
-      return null;
+
+      // #3. Construct the crawl result and return
+      return new TwitterPostCrawlResult {
+        CrawlTargetId = target.Id,
+        CrawlDoneAt = DateTime.Now,
+        ViewCount = data.ViewCount,
+        BookmarkCount = data.BookmarkCount,
+        LikesCount = data.LikesCount,
+        RetweetsCount = data.RetweetsCount,
+        QuotesCount = data.QuotesCount,
+        RepliesCount = data.RepliesCount
+      };
     }
   }
 }

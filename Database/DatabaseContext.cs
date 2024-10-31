@@ -7,8 +7,9 @@ namespace Trawler.Database {
   public partial class DatabaseContext : DbContext {
     private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(DatabaseContext));
     
-    public DbSet<CrawlTarget> CrawlTargets { get; set; }
-    public DbSet<CrawlResult> CrawlResults { get; set; }
+    public DbSet<CrawlTarget> CrawlTargets { get; init; }
+    public DbSet<TwitterAccountCrawlResult> TwitterAccountCrawlResults { get; init; }
+    public DbSet<TwitterPostCrawlResult> TwitterPostCrawlResults { get; init; }
     
     public DatabaseContext() { }
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
@@ -40,12 +41,17 @@ namespace Trawler.Database {
       }
 
       // Normal environment
-      optionsBuilder.UseMySql(Configuration.Instance.Config!.MySql!.ConnectionString,
-        ServerVersion.AutoDetect(Configuration.Instance.Config!.MySql!.ConnectionString));
+      optionsBuilder.UseMySql(Configuration.Instance.Config.MySql.ConnectionString,
+        ServerVersion.AutoDetect(Configuration.Instance.Config.MySql.ConnectionString));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
+      base.OnModelCreating(modelBuilder);
+      
       modelBuilder.UseCollation("utf8mb4_general_ci").HasCharSet("utf8mb4");
+      
+      // Base entities
+      modelBuilder.Ignore<CrawlResultBase>();
 
       OnModelCreatingPartial(modelBuilder);
     }

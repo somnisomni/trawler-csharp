@@ -12,11 +12,11 @@ namespace Trawler.Crawler {
     // public DateTime CreatedAt { get; init; }  <-- Non-standard human-readable format in API response
     public string TextContent { get; init; }
     public ulong ViewCount { get; init; }
-    public ulong BookmarkCount { get; init; }
-    public ulong LikesCount { get; init; }
-    public ulong RetweetsCount { get; init; }
-    public ulong QuotesCount { get; init; }
-    public ulong RepliesCount { get; init; }
+    public uint BookmarkCount { get; init; }
+    public uint LikesCount { get; init; }
+    public uint RetweetsCount { get; init; }
+    public uint QuotesCount { get; init; }
+    public uint RepliesCount { get; init; }
     public string[] Hashtags { get; init; }
     
     public void DebugPrint() {
@@ -153,11 +153,11 @@ namespace Trawler.Crawler {
         AuthorId = ulong.Parse(legacy.GetProperty("user_id_str").SafeGetString()),
         TextContent = legacy.GetProperty("full_text").SafeGetString(),
         ViewCount = ulong.Parse(json.GetProperty("views").GetProperty("count").SafeGetString()),
-        BookmarkCount = legacy.GetProperty("bookmark_count").GetUInt64(),
-        LikesCount = legacy.GetProperty("favorite_count").GetUInt64(),
-        RetweetsCount = legacy.GetProperty("retweet_count").GetUInt64(),
-        QuotesCount = legacy.GetProperty("quote_count").GetUInt64(),
-        RepliesCount = legacy.GetProperty("reply_count").GetUInt64(),
+        BookmarkCount = legacy.GetProperty("bookmark_count").GetUInt32(),
+        LikesCount = legacy.GetProperty("favorite_count").GetUInt32(),
+        RetweetsCount = legacy.GetProperty("retweet_count").GetUInt32(),
+        QuotesCount = legacy.GetProperty("quote_count").GetUInt32(),
+        RepliesCount = legacy.GetProperty("reply_count").GetUInt32(),
         Hashtags = legacy.GetProperty("entities").GetProperty("hashtags").EnumerateArray()
           .Select(x => x.GetProperty("text").SafeGetString()).ToArray()
       };

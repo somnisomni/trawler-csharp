@@ -12,7 +12,7 @@ using Trawler.Database;
 namespace Trawler.Database.Migration
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241029012834_InitialMigration")]
+    [Migration("20241031084415_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -26,43 +26,6 @@ namespace Trawler.Database.Migration
 
             MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4");
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("Trawler.Database.Model.CrawlResult", b =>
-                {
-                    b.Property<uint>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int unsigned");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
-
-                    b.Property<DateTime>("CrawlDoneAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<DateTime>("CrawlDoneAt"));
-
-                    b.Property<uint>("CrawlTargetId")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<uint>("FollowerCount")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<uint>("FollowingCount")
-                        .HasColumnType("int unsigned");
-
-                    b.Property<uint>("PostCount")
-                        .HasColumnType("int unsigned");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CrawlTargetId");
-
-                    b.ToTable("crawl_results", (string)null);
-                });
 
             modelBuilder.Entity("Trawler.Database.Model.CrawlTarget", b =>
                 {
@@ -96,7 +59,84 @@ namespace Trawler.Database.Migration
                     b.ToTable("crawl_targets", (string)null);
                 });
 
-            modelBuilder.Entity("Trawler.Database.Model.CrawlResult", b =>
+            modelBuilder.Entity("Trawler.Database.Model.TwitterAccountCrawlResult", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int unsigned");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+
+                    b.Property<DateTime>("CrawlDoneAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<DateTime>("CrawlDoneAt"));
+
+                    b.Property<uint>("CrawlTargetId")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<uint>("FollowerCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<uint>("FollowingCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<uint>("PostCount")
+                        .HasColumnType("int unsigned");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("twitter_account_crawl_results", (string)null);
+                });
+
+            modelBuilder.Entity("Trawler.Database.Model.TwitterPostCrawlResult", b =>
+                {
+                    b.Property<uint>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int unsigned");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("Id"));
+
+                    b.Property<uint>("BookmarkCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<DateTime>("CrawlDoneAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<DateTime>("CrawlDoneAt"));
+
+                    b.Property<uint>("CrawlTargetId")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<uint>("LikesCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<uint>("QuotesCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<uint>("RepliesCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<uint>("RetweetsCount")
+                        .HasColumnType("int unsigned");
+
+                    b.Property<ulong>("ViewCount")
+                        .HasColumnType("bigint unsigned");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CrawlTargetId");
+
+                    b.ToTable("twitter_post_crawl_results", (string)null);
+                });
+
+            modelBuilder.Entity("Trawler.Database.Model.TwitterPostCrawlResult", b =>
                 {
                     b.HasOne("Trawler.Database.Model.CrawlTarget", "CrawlTarget")
                         .WithMany("CrawlResults")

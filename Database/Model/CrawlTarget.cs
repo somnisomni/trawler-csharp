@@ -45,7 +45,7 @@ namespace Trawler.Database.Model {
     // ===
     
     // === Relationships
-    public ICollection<CrawlResult> CrawlResults { get; } = new List<CrawlResult>();
+    public ICollection<CrawlResultBase> CrawlResults { get; } = new List<CrawlResultBase>();
     // ===
   }
 }
