@@ -10,7 +10,7 @@ public class TwitterAccountWorkaroundCrawler(
   ulong postId) : TwitterAccountCrawler(driver, handle) {
   private readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(TwitterAccountWorkaroundCrawler));
   
-  public override async Task NavigateToTargetAsync() {
+  protected override async Task NavigateToTargetAsync() {
     logger.Log("*** Workaround (post-in-the-middle) mode");
     
     // #1. Navigate to the post page

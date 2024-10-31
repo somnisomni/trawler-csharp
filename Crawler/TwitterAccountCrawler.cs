@@ -54,7 +54,7 @@ namespace Trawler.Crawler {
       }
     }
 
-    public override async Task NavigateToTargetAsync() {
+    protected override async Task NavigateToTargetAsync() {
       logger.Log("Navigating to user profile page...");
 
       await driver.Navigate().GoToUrlAsync(BaseUrl);
