@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using OpenQA.Selenium;
 using Trawler.Utility;
+using Trawler.Utility.Extension;
 using Trawler.Utility.Logging;
 
 namespace Trawler.Crawler {
@@ -134,27 +135,19 @@ namespace Trawler.Crawler {
       return resultData;
     }
     
-    private static string GetStringFromJsonElement(JsonElement json) {
-      if(json.GetString() is { } value) {
-        return value;
-      }
-      
-      throw new JsonException("Can't get string value from JSON element.");
-    }
-    
     private static TwitterAccountData ParseTwitterAccountSchema(JsonElement json) {
       JsonElement authorElement = json.GetProperty("author");
     
       // Extract
       DateTime createdAt = json.GetProperty("dateCreated").GetDateTime();
-      string screenName = GetStringFromJsonElement(authorElement.GetProperty("additionalName"));
-      string nickname = GetStringFromJsonElement(authorElement.GetProperty("givenName"));
-      string bio = GetStringFromJsonElement(authorElement.GetProperty("description"));
-      string location = GetStringFromJsonElement(authorElement.GetProperty("homeLocation").GetProperty("name"));
-      ulong id = ulong.Parse(GetStringFromJsonElement(authorElement.GetProperty("identifier")));
+      string screenName = authorElement.GetProperty("additionalName").SafeGetString();
+      string nickname = authorElement.GetProperty("givenName").SafeGetString();
+      string bio = authorElement.GetProperty("description").SafeGetString();
+      string location = authorElement.GetProperty("homeLocation").GetProperty("name").SafeGetString();
+      ulong id = ulong.Parse(authorElement.GetProperty("identifier").SafeGetString());
       uint followerCount = 0, followingCount = 0, postCount = 0;
       foreach(JsonElement stat in authorElement.GetProperty("interactionStatistic").EnumerateArray()) {
-        switch(GetStringFromJsonElement(stat.GetProperty("name")).ToLower()) {
+        switch(stat.GetProperty("name").SafeGetString().ToLower()) {
           case "follows":
             followerCount = stat.GetProperty("userInteractionCount").GetUInt32();
             break;
@@ -166,7 +159,7 @@ namespace Trawler.Crawler {
             break;
         }
       }
-      string homepage = GetStringFromJsonElement(authorElement.GetProperty("url"));
+      string homepage = authorElement.GetProperty("url").SafeGetString();
 
       // Construct
       return new TwitterAccountData {
