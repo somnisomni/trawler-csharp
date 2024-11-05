@@ -12,7 +12,7 @@ using Trawler.Database;
 namespace Trawler.Database.Migration
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241031084415_InitialMigration")]
+    [Migration("20241105000326_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

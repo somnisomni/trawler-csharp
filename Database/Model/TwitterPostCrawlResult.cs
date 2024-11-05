@@ -7,6 +7,12 @@ namespace Trawler.Database.Model {
       builder.ToTable("twitter_post_crawl_results");
       
       base.Configure(builder);
+      builder.Property(x => x.ViewCount).IsRequired();
+      builder.Property(x => x.BookmarkCount).IsRequired();
+      builder.Property(x => x.LikesCount).IsRequired();
+      builder.Property(x => x.RetweetsCount).IsRequired();
+      builder.Property(x => x.QuotesCount).IsRequired();
+      builder.Property(x => x.RepliesCount).IsRequired();
     }
   }
   
