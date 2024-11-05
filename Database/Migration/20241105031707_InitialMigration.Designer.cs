@@ -12,7 +12,7 @@ using Trawler.Database;
 namespace Trawler.Database.Migration
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241105000326_InitialMigration")]
+    [Migration("20241105031707_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -116,6 +116,9 @@ namespace Trawler.Database.Migration
 
                     b.Property<uint>("LikesCount")
                         .HasColumnType("int unsigned");
+
+                    b.Property<DateTime>("PostCreatedAtUtc")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<uint>("QuotesCount")
                         .HasColumnType("int unsigned");

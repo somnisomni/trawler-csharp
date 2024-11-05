@@ -114,6 +114,9 @@ namespace Trawler.Database.Migration
                     b.Property<uint>("LikesCount")
                         .HasColumnType("int unsigned");
 
+                    b.Property<DateTime>("PostCreatedAtUtc")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<uint>("QuotesCount")
                         .HasColumnType("int unsigned");
 

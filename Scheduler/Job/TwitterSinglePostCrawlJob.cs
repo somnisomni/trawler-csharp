@@ -29,11 +29,12 @@ namespace Trawler.Scheduler.Job {
 
       // #2. Actual crawling
       TwitterPostData data = await new TwitterSinglePostCrawler(driver, target.TargetScreenName, target.TargetId.Value).DoCrawlAsync();
-
+      
       // #3. Construct the crawl result and return
       return new TwitterPostCrawlResult {
         CrawlTargetId = target.Id,
         CrawlDoneAt = DateTime.Now,
+        PostCreatedAtUtc = data.CreatedAt,
         ViewCount = data.ViewCount,
         BookmarkCount = data.BookmarkCount,
         LikesCount = data.LikesCount,

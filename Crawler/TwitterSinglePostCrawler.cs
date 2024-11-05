@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using OpenQA.Selenium;
@@ -10,7 +11,7 @@ namespace Trawler.Crawler {
     public ulong Id { get; init; }
     public ulong AuthorId { get; init; }
     
-    // public DateTime CreatedAt { get; init; }  <-- Non-standard human-readable format in API response
+    public DateTime CreatedAt { get; init; }  // <-- Non-standard human-readable format in API response
     public string TextContent { get; init; }
     public ulong ViewCount { get; init; }
     public uint BookmarkCount { get; init; }
@@ -24,6 +25,7 @@ namespace Trawler.Crawler {
       Console.WriteLine();
       Console.WriteLine($"Id: {Id}");
       Console.WriteLine($"AuthorId: {AuthorId}");
+      Console.WriteLine($"Created At: {CreatedAt}");
       Console.WriteLine($"TextContent: {TextContent}");
       Console.WriteLine($"ViewCount: {ViewCount}");
       Console.WriteLine($"BookmarkCount: {BookmarkCount}");
@@ -149,9 +151,21 @@ namespace Trawler.Crawler {
     private static TwitterPostData ParseTwitterPostData(JsonElement json) {
       JsonElement legacy = json.GetProperty("legacy");
       
+      // NOTE: `created_at` is in the format that DateTime can't parse directly.
+      //   example: Wed Oct 30 15:41:40 +0000 2024
+      //   in format string: "ddd MMM dd HH:mm:ss zzzz yyyy"
+      DateTime.TryParseExact(
+        legacy.GetProperty("created_at").SafeGetString(),
+        "ddd MMM dd HH:mm:ss zzzz yyyy",
+        CultureInfo.InvariantCulture,
+        DateTimeStyles.None,
+        out DateTime createdAt
+      );
+      
       return new TwitterPostData {
         Id = ulong.Parse(legacy.GetProperty("id_str").SafeGetString()),
         AuthorId = ulong.Parse(legacy.GetProperty("user_id_str").SafeGetString()),
+        CreatedAt = createdAt,
         TextContent = legacy.GetProperty("full_text").SafeGetString(),
         ViewCount = ulong.Parse(json.GetProperty("views").GetProperty("count").SafeGetString()),
         BookmarkCount = legacy.GetProperty("bookmark_count").GetUInt32(),

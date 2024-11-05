@@ -51,6 +51,11 @@ namespace Trawler {
         .StartNow()
         .WithCronSchedule("0 50 23 * * ?", x => x.InTimeZone(timezone))
         .Build();
+      
+      ITrigger immediateTrigger = TriggerBuilder.Create()
+        .WithIdentity("ImmediateTrigger", "Crawler")
+        .StartNow()
+        .Build();
 
       // Twitter account data crawl job - daily
       {
@@ -74,6 +79,7 @@ namespace Trawler {
         IJobDetail singlePostJobDetail = JobBuilder.Create<TwitterSinglePostCrawlJob>()
           .WithIdentity("TwitterSinglePost", "Crawler")
           .Build();
+        await scheduler.ScheduleJob(singlePostJobDetail, immediateTrigger);
         // TODO
         
         if(await scheduler.CheckExists(singlePostJobDetail.Key)) {
