@@ -28,7 +28,8 @@ namespace Trawler.Database.Migration
                     TargetScreenName = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TargetId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
-                    WorkaroundPostId = table.Column<ulong>(type: "bigint unsigned", nullable: true)
+                    WorkaroundPostId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    PostCreatedAtUtc = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,7 +66,6 @@ namespace Trawler.Database.Migration
                 {
                     Id = table.Column<uint>(type: "int unsigned", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PostCreatedAtUtc = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ViewCount = table.Column<ulong>(type: "bigint unsigned", nullable: false),
                     BookmarkCount = table.Column<uint>(type: "int unsigned", nullable: false),
                     LikesCount = table.Column<uint>(type: "int unsigned", nullable: false),

@@ -23,6 +23,12 @@ namespace Trawler.Database.Model {
       builder.Property(x => x.WorkaroundPostId).IsRequired(false);
       // ===
       
+      // === Specific to CrawlTargetType.SinglePost
+      builder.Property(x => x.PostCreatedAtUtc).IsRequired(false).HasConversion(
+        v => v != null ? v.Value.ToUniversalTime() : (DateTime?)null,
+        v => v != null ? v.Value.ToUniversalTime() : null);
+      // ===
+      
       // === Relationships
       builder.HasMany(x => x.CrawlResults)
         .WithOne(x => x.CrawlTarget)
@@ -42,6 +48,10 @@ namespace Trawler.Database.Model {
     
     // === Specific to CrawlTargetType.AccountWorkaround
     public ulong? WorkaroundPostId { get; set; }
+    // ===
+    
+    // === Specific to CrawlTargetType.SinglePost
+    public DateTime? PostCreatedAtUtc { get; set; }
     // ===
     
     // === Relationships

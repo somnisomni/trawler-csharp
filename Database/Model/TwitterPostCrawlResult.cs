@@ -7,9 +7,6 @@ namespace Trawler.Database.Model {
       builder.ToTable("twitter_post_crawl_results");
       
       base.Configure(builder);
-      builder.Property(x => x.PostCreatedAtUtc).IsRequired().HasConversion(
-        v => v.ToUniversalTime(),
-        v => v.ToUniversalTime());
       builder.Property(x => x.ViewCount).IsRequired();
       builder.Property(x => x.BookmarkCount).IsRequired();
       builder.Property(x => x.LikesCount).IsRequired();
@@ -21,7 +18,6 @@ namespace Trawler.Database.Model {
   
   [EntityTypeConfiguration(typeof(TwitterPostCrawlResultConfiguration))]
   public record TwitterPostCrawlResult : CrawlResultBase {
-    public DateTime PostCreatedAtUtc { get; set; }
     public ulong ViewCount { get; set; }
     public uint BookmarkCount { get; set; }
     public uint LikesCount { get; set; }

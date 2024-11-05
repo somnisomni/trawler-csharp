@@ -14,6 +14,7 @@ namespace Trawler {
       logger.Log("Program started.");
       
       await Initialize();
+      await AfterInitialization();
       await StartScheduler();
       await KeepRunning();
     }
@@ -36,6 +37,15 @@ namespace Trawler {
       }
 
       logger.Log("Initialization completed.");
+    }
+
+    private static async Task AfterInitialization() {
+      logger.Log("Starting after initialization tasks...");
+      
+      logger.Log("* Acquire post creation date for CrawlType.SinglePost targets if needed");
+      await TwitterSinglePostCrawlJob.AcquirePostCreationDateForTargets();
+      
+      logger.Log("After initialization tasks completed.");
     }
 
     private static async Task StartScheduler() {

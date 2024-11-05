@@ -45,8 +45,10 @@ namespace Trawler.Scheduler.Util {
       return Build(postData.CreatedAt);
     }
 
-    public static ImmutableArray<ITrigger> Build(TwitterPostCrawlResult postCrawlResult) {
-      return Build(postCrawlResult.PostCreatedAtUtc);
+    public static ImmutableArray<ITrigger> Build(CrawlTarget postTarget) {
+      if(postTarget.PostCreatedAtUtc == null) throw new ArgumentException("PostCreatedAtUtc is not set in specified CrawlTarget.");
+      
+      return Build(postTarget.PostCreatedAtUtc.Value);
     }
   }
 }
