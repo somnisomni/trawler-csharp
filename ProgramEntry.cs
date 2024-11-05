@@ -41,6 +41,7 @@ namespace Trawler {
     private static async Task StartScheduler() {
       logger.Log("Starting scheduler...");
       
+      TimeZoneInfo timezone = TimeZoneInfo.FindSystemTimeZoneById(Configuration.Instance.Config.Scheduler.DefaultTimezone);
       StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
       IScheduler scheduler = await schedulerFactory.GetScheduler();
       await scheduler.Start();
@@ -48,7 +49,7 @@ namespace Trawler {
       ITrigger dailyTrigger = TriggerBuilder.Create()
         .WithIdentity("DailyTrigger", "Crawler")
         .StartNow()
-        .WithCronSchedule("0 50 23 * * ?")
+        .WithCronSchedule("0 50 23 * * ?", x => x.InTimeZone(timezone))
         .Build();
 
       // Twitter account data crawl job - daily
@@ -59,7 +60,12 @@ namespace Trawler {
         await scheduler.ScheduleJob(accountDataJobDetail, dailyTrigger);
 
         if(await scheduler.CheckExists(accountDataJobDetail.Key)) {
-          logger.Log("Twitter account data crawl job scheduled.");
+          logger.Log("Daily Twitter account data crawl job scheduled.");
+
+          if(dailyTrigger.GetNextFireTimeUtc() is { UtcDateTime: { } nextFireTimeUtcDateTime }) {
+            logger.Log($"  \u2514 Next run at UTC: {nextFireTimeUtcDateTime}");
+            logger.Log($"  \u2514 Next run at {timezone.Id}: {TimeZoneInfo.ConvertTimeFromUtc(nextFireTimeUtcDateTime, timezone)}");
+          }
         }
       }
 
