@@ -1,6 +1,6 @@
 using OpenQA.Selenium;
-using Trawler.Utility;
-using Trawler.Utility.Logging;
+using Trawler.Common.Utility;
+using Trawler.Common.Utility.Logging;
 
 namespace Trawler.Crawler {
   public class TwitterAccountWorkaroundCrawler(

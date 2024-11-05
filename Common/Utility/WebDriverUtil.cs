@@ -3,11 +3,10 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Chromium;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
-using Trawler.Common;
+using Trawler.Common.Utility.Logging;
 using Trawler.Config;
-using Trawler.Utility.Logging;
 
-namespace Trawler.Utility {
+namespace Trawler.Common.Utility {
   public static class WebDriverUtil {
     private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(WebDriverUtil));
     

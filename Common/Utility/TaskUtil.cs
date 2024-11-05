@@ -1,4 +1,4 @@
-namespace Trawler.Utility {
+namespace Trawler.Common.Utility {
   public static class TaskUtil {
     public static async Task WaitForValueAsync<T>(Func<T?> valueGetter, Func<T?, bool> predicate, ulong pollInterval = 100UL) {
       while(!predicate(valueGetter())) await Task.Delay(TimeSpan.FromMilliseconds(pollInterval));

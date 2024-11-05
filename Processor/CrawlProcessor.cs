@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chromium;
+using Trawler.Common.Utility;
+using Trawler.Common.Utility.Logging;
 using Trawler.Crawler;
 using Trawler.Database;
 using Trawler.Database.Model;
-using Trawler.Utility;
-using Trawler.Utility.Logging;
 
 namespace Trawler.Processor {
   public static class CrawlProcessor {
@@ -20,7 +20,7 @@ namespace Trawler.Processor {
       // #2. Acquire crawl targets
       logger.Log("Acquiring crawl targets from the database...");
       
-      List<CrawlTarget> targets = [];
+      List<CrawlTarget> targets;
 
       try {
         await using var db = new DatabaseContext();

@@ -1,6 +1,6 @@
 using System.Text;
 using Trawler.Common;
-using Trawler.Utility.Logging;
+using Trawler.Common.Utility.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 

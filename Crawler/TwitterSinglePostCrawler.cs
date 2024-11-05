@@ -1,14 +1,15 @@
 using System.Text;
 using System.Text.Json;
 using OpenQA.Selenium;
-using Trawler.Utility;
-using Trawler.Utility.Extension;
-using Trawler.Utility.Logging;
+using Trawler.Common.Utility;
+using Trawler.Common.Utility.Extension;
+using Trawler.Common.Utility.Logging;
 
 namespace Trawler.Crawler {
   public readonly struct TwitterPostData {
     public ulong Id { get; init; }
     public ulong AuthorId { get; init; }
+    
     // public DateTime CreatedAt { get; init; }  <-- Non-standard human-readable format in API response
     public string TextContent { get; init; }
     public ulong ViewCount { get; init; }

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Trawler.Utility.Extension {
+namespace Trawler.Common.Utility.Extension {
   public static class JsonElementExtension {
     public static string SafeGetString(this JsonElement json) {
       if(json.GetString() is { } value) {

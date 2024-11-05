@@ -2,9 +2,9 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
 using OpenQA.Selenium;
-using Trawler.Utility;
-using Trawler.Utility.Extension;
-using Trawler.Utility.Logging;
+using Trawler.Common.Utility;
+using Trawler.Common.Utility.Extension;
+using Trawler.Common.Utility.Logging;
 
 namespace Trawler.Crawler {
   public readonly struct TwitterAccountData {

@@ -1,4 +1,4 @@
-namespace Trawler.Utility.Logging {
+namespace Trawler.Common.Utility.Logging {
   public class ConsoleLogger(string subject) : LoggerBase {
     public override void Log(string message) {
       Console.Out.WriteLine($"({DateTimeNow}) [{subject}] {message}");

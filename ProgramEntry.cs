@@ -1,7 +1,7 @@
+using Trawler.Common.Utility.Logging;
 using Trawler.Config;
 using Trawler.Database;
 using Trawler.Processor;
-using Trawler.Utility.Logging;
 
 namespace Trawler {
   public static class ProgramEntry {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Trawler.Common.Utility.Logging;
 using Trawler.Config;
 using Trawler.Database.Model;
-using Trawler.Utility.Logging;
 
 namespace Trawler.Database {
   public partial class DatabaseContext : DbContext {
