@@ -1,6 +1,8 @@
 namespace Trawler.Common.Utility.Logging {
   public abstract class LoggerBase {
     public abstract void Log(string message);
+    public abstract void LogWarning(string message);
+    public abstract void LogWarning(string message, Exception e);
     public abstract void LogError(string message);
     public abstract void LogError(string message, Exception e);
   

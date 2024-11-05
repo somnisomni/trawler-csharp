@@ -4,6 +4,15 @@ namespace Trawler.Common.Utility.Logging {
       Console.Out.WriteLine($"({DateTimeNow}) [{subject}] {message}");
     }
 
+    public override void LogWarning(string message) {
+      Console.Out.WriteLine($"({DateTimeNow}) [{subject}] WARNING: {message}");
+    }
+
+    public override void LogWarning(string message, Exception e) {
+      Console.Out.WriteLine($"({DateTimeNow}) [{subject}] WARNING: {message}");
+      Console.Out.WriteLine($"  \u2514 Exception: {e}");
+    }
+
     public override void LogError(string message) {
       Console.Error.WriteLine($"({DateTimeNow}) [{subject}] ERROR: {message}");
     }
