@@ -89,7 +89,7 @@ namespace Trawler {
         IJobDetail singlePostJobDetail = JobBuilder.Create<TwitterSinglePostCrawlJob>()
           .WithIdentity("TwitterSinglePost", "Crawler")
           .Build();
-        await scheduler.ScheduleJob(singlePostJobDetail, immediateTrigger);
+        // await scheduler.ScheduleJob(singlePostJobDetail, immediateTrigger);
         // TODO
         
         if(await scheduler.CheckExists(singlePostJobDetail.Key)) {
