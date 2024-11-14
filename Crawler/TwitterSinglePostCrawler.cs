@@ -63,18 +63,16 @@ namespace Trawler.Crawler {
     public override async Task<TwitterPostData> DoCrawlAsync() {
       logger.Log($"*** Start crawling single post data. Target user: @{handle}, Target post ID: {postId}");
       
-      // #1. Start watching for Tweet data response
-      Task<string?> responseWatcher = Task.Run(StartWatchTweetResultResponse);
-      
-      // #2. Navigate to target
+      // #1. Navigate to target and start watching for Tweet data response
+      Task<string?> responseWatcher;
       try {
-        await NavigateToTargetAsync();
+        responseWatcher = Task.Run(NavigateAndStartWatchTweetResultResponse);
       } catch(Exception e) {
-        logger.LogError("Failed to navigate to the base URL.", e);
+        logger.LogError("Error occured while navigate to post page and watch Tweet data response.", e);
         throw;
       }
 
-      // #3. Wait for Tweet data response to be available
+      // #2. Wait for Tweet data response to be available
       string? tweetData = null;
       try {
         logger.Log("Waiting for post data response to be available...");
@@ -89,33 +87,33 @@ namespace Trawler.Crawler {
         throw;
       }
       
-      // #4. Parse Tweet data
+      // #3. Parse Tweet data
       TwitterPostData resultData;
       try {
         logger.Log("Start parsing post data...");
         
-        // #4-1. Parse JSON
+        // #3-1. Parse JSON
         JsonElement data = (await JsonDocument.ParseAsync(new MemoryStream(Encoding.UTF8.GetBytes(tweetData))))
           .RootElement
           .GetProperty("data")
           .GetProperty("tweetResult")
           .GetProperty("result");
 
-        // #4-2. Extract actual data
+        // #3-2. Extract actual data
         resultData = ParseTwitterPostData(data);
       } catch(Exception e) {
         logger.LogError("Failed to parse post data.", e);
         throw;
       }
       
-      // #5. Done
+      // #4. Done
       logger.Log($"*** Post data parsed successfully. Done crawling. (Post ID: #{resultData.Id})");
       return resultData;
     }
     
-    private async Task<string?> StartWatchTweetResultResponse() {
+    private async Task<string?> NavigateAndStartWatchTweetResultResponse() {
       // NOTE: `TweetResultByRestId` response is only available when not logged in to Twitter.
-      logger.Log("Start watching for `TweetResultByRestId` response...");
+      logger.Log("Setting up network watcher for `TweetResultByRestId` response...");
       
       // Set up network monitoring
       var network = new NetworkManager(driver);
@@ -142,6 +140,9 @@ namespace Trawler.Crawler {
       
       // Begin network monitoring
       await network.StartMonitoring();
+      
+      // Navigate
+      await NavigateToTargetAsync();
 
       // Wait for response body to be available
       await TaskUtil.WaitForValueAsync(() => responseBody);
