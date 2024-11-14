@@ -13,11 +13,20 @@ namespace Trawler.Scheduler.Job {
   public class TwitterSinglePostCrawlJob : CrawlJobBase {
     private static readonly LoggerBase logger = LoggerFactory.CreateLogger(subject: nameof(TwitterSinglePostCrawlJob));
 
+    private uint targetDbId = uint.MaxValue;
+
+    public override Task Execute(IJobExecutionContext context) {
+      targetDbId = (uint)context.MergedJobDataMap.GetLongValue("targetDbId");
+      logger.Log($"Job CrawlTarget DB ID: {targetDbId}");
+      
+      return base.Execute(context);
+    }
+
     protected override async Task<ImmutableArray<CrawlTarget>> AcquireTarget() {
       await using var db = new DatabaseContext();
       
       return (await db.CrawlTargets
-        .Where(x => x.CrawlType == CrawlTargetType.SinglePost)
+        .Where(x => x.Id == targetDbId && x.CrawlType == CrawlTargetType.SinglePost)
         .ToArrayAsync()).ToImmutableArray();
     }
 

@@ -34,21 +34,25 @@ namespace Trawler.Scheduler.Util {
       TimeSpan.FromDays(30),
     ];
 
-    private static ImmutableArray<ITrigger> Build(DateTime postDateTime) {
+    private static ImmutableArray<ITrigger> Build(DateTime postDateTime, IJobDetail targetJob) {
       DateTime copy = postDateTime;
-      return CrawlTimeOffsets.Select(offset => TriggerBuilder.Create()
-        .StartAt(copy.Add(offset))
-        .Build()).ToImmutableArray();
+      return CrawlTimeOffsets
+        .Where(offset => copy.Add(offset) >= DateTime.Now)
+        .Select(offset => TriggerBuilder.Create()
+          .StartAt(copy.Add(offset))
+          .ForJob(targetJob)
+          .Build())
+        .ToImmutableArray();
     }
     
-    public static ImmutableArray<ITrigger> Build(TwitterPostData postData) {
-      return Build(postData.CreatedAt);
+    public static ImmutableArray<ITrigger> Build(TwitterPostData postData, IJobDetail targetJob) {
+      return Build(postData.CreatedAt, targetJob);
     }
 
-    public static ImmutableArray<ITrigger> Build(CrawlTarget postTarget) {
+    public static ImmutableArray<ITrigger> Build(CrawlTarget postTarget, IJobDetail targetJob) {
       if(postTarget.PostCreatedAtUtc == null) throw new ArgumentException("PostCreatedAtUtc is not set in specified CrawlTarget.");
       
-      return Build(postTarget.PostCreatedAtUtc.Value);
+      return Build(postTarget.PostCreatedAtUtc.Value, targetJob);
     }
   }
 }

@@ -1,9 +1,13 @@
+using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using Quartz.Impl;
 using Trawler.Common.Utility.Logging;
 using Trawler.Config;
 using Trawler.Database;
+using Trawler.Database.Model;
 using Trawler.Scheduler.Job;
+using Trawler.Scheduler.Util;
 
 namespace Trawler {
   public static class ProgramEntry {
@@ -84,16 +88,43 @@ namespace Trawler {
         }
       }
 
-      // Twitter single post crawl job - ???
+      // Twitter single post crawl job - per target
+      List<IJobDetail> singlePostJobDetails = [];
       {
-        IJobDetail singlePostJobDetail = JobBuilder.Create<TwitterSinglePostCrawlJob>()
-          .WithIdentity("TwitterSinglePost", "Crawler")
-          .Build();
-        await scheduler.ScheduleJob(singlePostJobDetail, immediateTrigger);
-        // TODO
+        await using DatabaseContext db = new();
+        CrawlTarget[] targets = await db.CrawlTargets
+          .Where(x => x.CrawlType == CrawlTargetType.SinglePost)
+          .ToArrayAsync();
+
+        foreach(CrawlTarget target in targets) {
+          IJobDetail jobDetail = JobBuilder.Create<TwitterSinglePostCrawlJob>()
+            .WithIdentity($"TwitterSinglePost_{target.TargetScreenName}_{target.TargetId}", "Crawler")
+            .Build();
+          jobDetail.JobDataMap.Put("targetDbId", target.Id);
+          ImmutableArray<ITrigger> triggers = TwitterSinglePostCrawlTriggerBuilder.Build(target, jobDetail);
+
+          if(triggers.Length <= 0) {
+            logger.Log($"Single post target {target.TargetScreenName}/{target.TargetId} has expired and will not be scheduled.");
+            continue;
+          }
+          
+          await scheduler.AddJob(jobDetail, replace: true, storeNonDurableWhileAwaitingScheduling: true);
+          
+          logger.Log($"Scheduling Twitter single post crawl job for {target.TargetScreenName}/{target.TargetId}");
+          foreach(ITrigger trigger in triggers) {
+            await scheduler.ScheduleJob(trigger);
+            
+            logger.Log($"  \u2514 {trigger.GetNextFireTimeUtc()?.ToString()}");
+          }
         
-        if(await scheduler.CheckExists(singlePostJobDetail.Key)) {
-          logger.Log("Twitter single post crawl job scheduled.");
+          if(await scheduler.CheckExists(jobDetail.Key)) {
+            logger.Log($"Twitter single post crawl job scheduled for {target.TargetScreenName}/{target.TargetId}");
+            singlePostJobDetails.Add(jobDetail);
+          }
+        }
+        
+        if(singlePostJobDetails.Count > 0) {
+          logger.Log($"Total {singlePostJobDetails.Count} Twitter single post crawl job(s) scheduled.");
         }
       }
     }
