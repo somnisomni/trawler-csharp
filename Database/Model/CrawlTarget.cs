@@ -26,7 +26,7 @@ namespace Trawler.Database.Model {
       // === Specific to CrawlTargetType.SinglePost
       builder.Property(x => x.PostCreatedAtUtc).IsRequired(false).HasConversion(
         v => v != null ? v.Value.ToUniversalTime() : (DateTime?)null,
-        v => v != null ? v.Value.ToUniversalTime() : null);
+        v => v != null ? v.Value.ToLocalTime() : null);
       // ===
       
       // === Relationships
