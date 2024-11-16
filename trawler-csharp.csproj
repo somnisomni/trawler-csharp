@@ -1,11 +1,58 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <!-- Common properties -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <Version>0.0.0</Version>
+    <AssemblyName>Trawler</AssemblyName>
     <RootNamespace>Trawler</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;DebugCI</Configurations>
   </PropertyGroup>
+  
+  <!-- 'Debug' and 'DebugCI' common configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Debug' Or '$(Configuration)'=='DebugCI'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  
+  <!-- 'Debug' configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <OutputPath>bin/Debug/</OutputPath>
+  </PropertyGroup>
+
+  <!-- 'Release' and 'DebugCI' common configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='DebugCI'">
+    <RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+  
+  <!-- 'Release' configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <Optimize>true</Optimize>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <NoWarn>IL2104</NoWarn>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    
+    <OutputPath>bin/Release/</OutputPath>
+    <PublishDir>bin/Release/publish</PublishDir>
+  </PropertyGroup>
+  
+  <!-- 'DebugCI' configuration properties -->
+  <PropertyGroup Condition="'$(Configuration)'=='DebugCI'">
+    <OutputPath>bin/DebugCI/</OutputPath>
+    <PublishDir>bin/DebugCI/publish</PublishDir>
+  </PropertyGroup>
+  
+  <!-- ======================================== -->
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
