@@ -56,11 +56,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore --runtime win-${{ matrix.arch }}
     - name: Build using 'DebugCI' configuration
-      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime win-${{ matrix.arch }}
+      run: dotnet build $env:ROOT_CSPROJ_PATH --configuration DebugCI --runtime win-${{ matrix.arch }}
     - name: Test
-      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime win-${{ matrix.arch }}
+      run: dotnet test $env:ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime win-${{ matrix.arch }}
     - name: Publish the binary
-      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime win-${{ matrix.arch }} 
+      run: dotnet publish $env:ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime win-${{ matrix.arch }} 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
       with:
