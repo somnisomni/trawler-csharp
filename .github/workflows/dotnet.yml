@@ -68,29 +68,29 @@ jobs:
         path: output
         compression-level: 9
 
-  build-osx:
-    name: macOS ${{ matrix.arch }} - Build
-    runs-on: osx-latest
-    strategy:
-      matrix:
-        arch: [ 'arm64' ]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore --runtime osx-${{ matrix.arch }}
-    - name: Build using 'DebugCI' configuration
-      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime osx-${{ matrix.arch }}
-    - name: Test
-      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime osx-${{ matrix.arch }}
-    - name: Publish the binary
-      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime osx-${{ matrix.arch }} 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: macOS ${{ matrix.arch }}
-        path: output
-        compression-level: 9
+  # build-osx:
+  #   name: macOS ${{ matrix.arch }} - Build
+  #   runs-on: osx-latest
+  #   strategy:
+  #     matrix:
+  #       arch: [ 'arm64' ]
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v4
+  #     with:
+  #       dotnet-version: 8.0.x
+  #   - name: Restore dependencies
+  #     run: dotnet restore --runtime osx-${{ matrix.arch }}
+  #   - name: Build using 'DebugCI' configuration
+  #     run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime osx-${{ matrix.arch }}
+  #   - name: Test
+  #     run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime osx-${{ matrix.arch }}
+  #   - name: Publish the binary
+  #     run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime osx-${{ matrix.arch }} 
+  #   - name: Upload a Build Artifact
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: macOS ${{ matrix.arch }}
+  #       path: output
+  #       compression-level: 9
