@@ -24,15 +24,112 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore --arch x64
+      run: dotnet restore --runtime linux-x64
     - name: Build using 'DebugCI' configuration
-      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --arch x64
+      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime linux-x64
     - name: Test
-      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --arch x64
+      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime linux-x64
     - name: Publish the binary
-      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --configuration DebugCI --arch x64 --output output
+      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime linux-x64 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Linux x64
         path: output
+        compression-level: 9
+
+  build-linux-arm64:
+    name: Linux ARM64 - Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore --runtime linux-arm64
+    - name: Build using 'DebugCI' configuration
+      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime linux-arm64
+    - name: Test
+      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime linux-arm64
+    - name: Publish the binary
+      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime linux-arm64 
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux ARM64
+        path: output
+        compression-level: 9
+
+  build-win-x64:
+    name: Windows x64 - Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore --runtime win-x64
+    - name: Build using 'DebugCI' configuration
+      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime win-x64
+    - name: Test
+      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime win-x64
+    - name: Publish the binary
+      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime win-x64 
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows x64
+        path: output
+        compression-level: 9
+
+  build-win-arm64:
+    name: Windows ARM64 - Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore --runtime win-arm64
+    - name: Build using 'DebugCI' configuration
+      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime win-arm64
+    - name: Test
+      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime win-arm64
+    - name: Publish the binary
+      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime win-arm64 
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows ARM64
+        path: output
+        compression-level: 9
+
+  build-osx-arm64:
+    name: macOS ARM64 - Build
+    runs-on: osx-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore --runtime osx-arm64
+    - name: Build using 'DebugCI' configuration
+      run: dotnet build $ROOT_CSPROJ_PATH --configuration DebugCI --runtime osx-arm64
+    - name: Test
+      run: dotnet test $ROOT_CSPROJ_PATH --no-build --verbosity normal --configuration DebugCI --runtime osx-arm64
+    - name: Publish the binary
+      run: dotnet publish $ROOT_CSPROJ_PATH --no-build --output output --configuration DebugCI --runtime osx-arm64 
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: macOS ARM64
+        path: output
+        compression-level: 9
