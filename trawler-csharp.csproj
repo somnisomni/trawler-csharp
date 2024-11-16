@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="config.yaml">
+    <AdditionalFiles Include="config.yaml" Condition="Exists('config.yaml')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
   </ItemGroup>
