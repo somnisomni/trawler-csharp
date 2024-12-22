@@ -77,7 +77,7 @@ namespace Trawler.Crawler {
         logger.Log("Waiting for profile page to be loaded completely...");
 
         WebDriverUtil.WaitForElementsByCssSelectors(driver, [
-          "[data-testid='primaryColumn']",
+          "[data-testid='UserDescription']",
           "[data-testid='UserName']"
         ]);
       } catch(Exception e) {
@@ -137,17 +137,17 @@ namespace Trawler.Crawler {
     }
     
     private static TwitterAccountData ParseTwitterAccountSchema(JsonElement json) {
-      JsonElement authorElement = json.GetProperty("author");
+      JsonElement mainEntity = json.GetProperty("mainEntity");
     
       // Extract
       DateTime createdAt = json.GetProperty("dateCreated").GetDateTime();
-      string screenName = authorElement.GetProperty("additionalName").SafeGetString();
-      string nickname = authorElement.GetProperty("givenName").SafeGetString();
-      string bio = authorElement.GetProperty("description").SafeGetString();
-      string location = authorElement.GetProperty("homeLocation").GetProperty("name").SafeGetString();
-      ulong id = ulong.Parse(authorElement.GetProperty("identifier").SafeGetString());
+      string screenName = mainEntity.GetProperty("additionalName").SafeGetString();
+      string nickname = mainEntity.GetProperty("givenName").SafeGetString();
+      string bio = mainEntity.GetProperty("description").SafeGetString();
+      string location = mainEntity.GetProperty("homeLocation").GetProperty("name").SafeGetString();
+      ulong id = ulong.Parse(mainEntity.GetProperty("identifier").SafeGetString());
       uint followerCount = 0, followingCount = 0, postCount = 0;
-      foreach(JsonElement stat in authorElement.GetProperty("interactionStatistic").EnumerateArray()) {
+      foreach(JsonElement stat in mainEntity.GetProperty("interactionStatistic").EnumerateArray()) {
         switch(stat.GetProperty("name").SafeGetString().ToLower()) {
           case "follows":
             followerCount = stat.GetProperty("userInteractionCount").GetUInt32();
@@ -160,7 +160,7 @@ namespace Trawler.Crawler {
             break;
         }
       }
-      string homepage = authorElement.GetProperty("url").SafeGetString();
+      string homepage = mainEntity.GetProperty("url").SafeGetString();
 
       // Construct
       return new TwitterAccountData {

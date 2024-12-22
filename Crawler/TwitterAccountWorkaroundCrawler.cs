@@ -26,7 +26,7 @@ namespace Trawler.Crawler {
         logger.Log("Waiting for the post page to be loaded completely...");
 
         WebDriverUtil.WaitForElementsByCssSelectors(driver, [
-          "[data-testid='primaryColumn']",
+          "[data-testid='UserDescription']",
           "[data-testid='User-Name']",
         ]);
       } catch(Exception e) {
