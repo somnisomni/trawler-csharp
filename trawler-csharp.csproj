@@ -2,13 +2,15 @@
   <!-- Common properties -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Version>0.0.0</Version>
     <AssemblyName>Trawler</AssemblyName>
     <RootNamespace>Trawler</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;DebugCI</Configurations>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   
   <!-- 'Debug' and 'DebugCI' common configuration properties -->
